@@ -1,4 +1,4 @@
-import { useEffect, useState, useSyncExternalStore } from 'react';
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { LifeEngine, SPEEDS, type Stats } from './engine';
 import { LifeCanvas, type Tool } from './LifeCanvas';
 import { PALETTE_NAMES } from './palettes';
@@ -32,6 +32,22 @@ export default function App() {
   const [palette, setPalette] = useState(PALETTE_NAMES[0]);
   const [tool, setTool] = useState<Tool>('draw');
   const [density, setDensity] = useState(0.22);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  // Snapshot the board exactly as drawn (palette and all) and download it.
+  const exportPng = () => {
+    canvasRef.current?.toBlob((blob) => {
+      if (!blob) return;
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `life-${RULES[ruleIdx].name.toLowerCase().replace(/\W+/g, '-')}-gen-${stats.generation}.png`;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }, 'image/png');
+  };
+  // The keyboard handler is bound once per engine, so read the latest export through a ref.
+  const exportRef = useRef(exportPng);
+  exportRef.current = exportPng;
 
   useEffect(() => {
     if (!engine) return;
@@ -56,6 +72,7 @@ export default function App() {
       } else if (e.key === 's') engine.step();
       else if (e.key === 'r') engine.random(density);
       else if (e.key === 'c') engine.clear();
+      else if (e.key === 'p') exportRef.current();
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
@@ -77,9 +94,9 @@ export default function App() {
             painted from a typed array.
           </p>
         </header>
-        <LifeCanvas engine={engine} palette={palette} tool={tool} />
+        <LifeCanvas engine={engine} palette={palette} tool={tool} canvasRef={canvasRef} />
         <p className="hint">
-          <kbd>Space</kbd> play/pause · <kbd>S</kbd> step · <kbd>R</kbd> randomize · <kbd>C</kbd> clear · drag to draw
+          <kbd>Space</kbd> play/pause · <kbd>S</kbd> step · <kbd>R</kbd> randomize · <kbd>C</kbd> clear · <kbd>P</kbd> save PNG · drag to draw
         </p>
       </section>
 
@@ -113,6 +130,7 @@ export default function App() {
           </button>
           <button onClick={() => engine.random(density)}>Randomize</button>
           <button onClick={() => engine.clear()}>Clear</button>
+          <button onClick={exportPng}>Save PNG</button>
         </div>
 
         <label>

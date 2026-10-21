@@ -19,9 +19,10 @@ A cellular automata playground. Conway's Game of Life and five other rule sets o
 ## Features
 
 - Rules: Conway, HighLife, Day & Night, Seeds, Maze, Coral
-- Stamp patterns: Glider, LWSS, R-pentomino, Acorn, Pulsar, Gosper glider gun
+- Stamp patterns: Glider, LWSS, R-pentomino, Acorn, Diehard (vanishes after 130 generations), Pentadecathlon, Beacon, Pulsar, Gosper glider gun
+- Save the board as a PNG, palette included
 - Three grid sizes, five speeds, three age palettes, live population sparkline
-- Keyboard: `Space` play/pause, `S` step, `R` randomize, `C` clear
+- Keyboard: `Space` play/pause, `S` step, `R` randomize, `C` clear, `P` save PNG
 
 ## Run it
 

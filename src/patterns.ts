@@ -4,6 +4,9 @@ export const PATTERNS: Record<string, string[]> = {
   'Spaceship (LWSS)': ['.O..O', 'O....', 'O...O', 'OOOO.'],
   'R-pentomino': ['.OO', 'OO.', '.O.'],
   Acorn: ['.O.....', '...O...', 'OO..OOO'],
+  Diehard: ['......O.', 'OO......', '.O...OOO'],
+  Pentadecathlon: ['..O....O..', 'OO.OOOO.OO', '..O....O..'],
+  Beacon: ['OO..', 'OO..', '..OO', '..OO'],
   Pulsar: [
     '..OOO...OOO..',
     '.............',

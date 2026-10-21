@@ -9,6 +9,7 @@ interface Props {
   engine: LifeEngine;
   palette: string;
   tool: Tool;
+  canvasRef: React.RefObject<HTMLCanvasElement>;
 }
 
 /** Cells between two points, so a fast drag still paints a continuous line. */
@@ -20,8 +21,7 @@ function line(x0: number, y0: number, x1: number, y1: number): [number, number][
   ]);
 }
 
-export function LifeCanvas({ engine, palette, tool }: Props) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+export function LifeCanvas({ engine, palette, tool, canvasRef }: Props) {
   const lutRef = useRef(buildLut(palette));
   const lastFrame = useRef<Parameters<NonNullable<LifeEngine['onFrame']>>[0] | null>(null);
   const drawRef = useRef<() => void>(() => {});
@@ -75,7 +75,7 @@ export function LifeCanvas({ engine, palette, tool }: Props) {
       engine.onFrame = null;
       ro.disconnect();
     };
-  }, [engine]);
+  }, [engine, canvasRef]);
 
   const dragging = useRef<{ x: number; y: number } | null>(null);
 
